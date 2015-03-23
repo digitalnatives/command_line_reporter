@@ -5,6 +5,7 @@ require 'command_line_reporter/formatter/progress'
 require 'command_line_reporter/formatter/nested'
 require 'command_line_reporter/row'
 require 'command_line_reporter/column'
+require 'command_line_reporter/column_extra_line'
 require 'command_line_reporter/table'
 require 'command_line_reporter/version'
 
@@ -140,8 +141,14 @@ module CommandLineReporter
   end
 
   def column(text, options = {})
-    col = CommandLineReporter::Column.new(text, options)
-    @row.add(col)
+    @col = CommandLineReporter::Column.new(text, options)
+    @row.add(@col)
+    yield if block_given?
+  end
+
+  def column_extra_line(text, options = {})
+    col_extra_line = CommandLineReporter::ColumnExtraLine.new(text, options)
+    @col.add_extra_line(col_extra_line)
   end
 
   private
